@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preguntas para Mary · recuperar clases</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root { --fondo:#fbf7f4; --tarjeta:#fff; --tinta:#2b2326; --suave:#6f6468; --rosa:#c2477a; --rosa-claro:#fbe7ef;
+    --verde:#2f7d55; --verde-claro:#e5f4ec; --ambar:#a86a00; --ambar-claro:#fff3dc; --rojo:#b3261e; --rojo-claro:#fde8e6; --borde:#eadfe3; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:var(--fondo); color:var(--tinta); font:18px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:560px; margin:0 auto; padding:14px 16px 120px; }
+  .barra { position:sticky; top:0; z-index:5; background:var(--fondo); padding:10px 0 8px; }
+  .progreso { height:10px; background:#efe4e8; border-radius:99px; overflow:hidden; }
+  .progreso i { display:block; height:100%; width:0; background:var(--rosa); border-radius:99px; transition:width .3s; }
+  .cuenta { display:flex; justify-content:space-between; font-size:15px; color:var(--suave); margin-top:6px; }
+  .puntos { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .puntos button { width:22px; height:22px; border-radius:50%; border:2px solid var(--borde); background:#fff; padding:0; cursor:pointer; }
+  .puntos button.listo { background:var(--verde); border-color:var(--verde); }
+  .puntos button.actual { border-color:var(--rosa); box-shadow:0 0 0 3px var(--rosa-claro); }
+  .card { background:var(--tarjeta); border:1px solid var(--borde); border-radius:20px; padding:20px 18px; margin-top:10px; box-shadow:0 2px 10px rgba(80,30,50,.06); }
+  .chip { display:inline-block; font-size:14px; font-weight:700; padding:4px 12px; border-radius:99px; }
+  .rojo { background:var(--rojo-claro); color:var(--rojo); } .ambar { background:var(--ambar-claro); color:var(--ambar); }
+  .rosa { background:var(--rosa-claro); color:var(--rosa); } .verde { background:var(--verde-claro); color:var(--verde); }
+  h1 { font-size:28px; line-height:1.2; margin:10px 0 8px; }
+  h2 { font-size:24px; margin:8px 0; }
+  .texto { font-size:19px; margin:0 0 14px; }
+  .foto { margin:14px 0; }
+  .foto span { display:block; font-size:15px; font-weight:700; color:var(--suave); margin-bottom:6px; }
+  .foto img { width:100%; border-radius:14px; border:1px solid var(--borde); display:block; cursor:zoom-in; }
+  .pregunta { font-size:22px; font-weight:800; margin:20px 0 12px; }
+  .opciones { display:grid; gap:10px; }
+  .opciones button { font:inherit; font-size:19px; font-weight:700; text-align:left; padding:16px 18px; min-height:60px; border-radius:16px;
+    border:2px solid var(--borde); background:#fff; color:var(--tinta); cursor:pointer; }
+  .opciones button:active { transform:scale(.98); }
+  .opciones button.elegida { border-color:var(--verde); background:var(--verde-claro); color:var(--verde); }
+  .opciones button.elegida::after { content:"  ✔"; }
+  .nota-btn { font:inherit; font-size:16px; background:none; border:none; color:var(--rosa); font-weight:700; padding:14px 0 0; cursor:pointer; }
+  textarea { width:100%; font:inherit; font-size:18px; border:2px solid var(--borde); border-radius:14px; padding:12px; margin-top:8px; min-height:80px; }
+  .abajo { position:fixed; left:0; right:0; bottom:0; background:rgba(251,247,244,.96); border-top:1px solid var(--borde); padding:10px 16px calc(10px + env(safe-area-inset-bottom)); z-index:6; }
+  .abajo div { max-width:560px; margin:0 auto; display:flex; gap:10px; }
+  .abajo button { flex:1; font:inherit; font-size:18px; font-weight:700; min-height:54px; border-radius:14px; border:2px solid var(--borde); background:#fff; color:var(--tinta); cursor:pointer; }
+  .abajo button.principal { background:var(--rosa); border-color:var(--rosa); color:#fff; }
+  .abajo button:disabled { opacity:.35; }
+  .grande { font-size:20px; }
+  .pasos { margin:14px 0; padding:0; list-style:none; display:grid; gap:10px; }
+  .pasos li { background:var(--rosa-claro); border-radius:14px; padding:12px 14px; font-size:19px; }
+  .pasos b { color:var(--rosa); margin-right:6px; }
+  .resumen { display:grid; gap:8px; margin:12px 0; }
+  .resumen div { border:1px solid var(--borde); border-radius:12px; padding:10px 12px; font-size:17px; }
+  .resumen div.falta { background:var(--ambar-claro); border-color:#f1d9a6; }
+  .resumen small { display:block; color:var(--suave); font-size:15px; }
+  .copiar { width:100%; font:inherit; font-size:21px; font-weight:800; min-height:64px; border-radius:16px; border:none; background:var(--verde); color:#fff; cursor:pointer; margin-top:8px; }
+  .wsp { display:block; text-align:center; font-size:19px; font-weight:700; color:var(--verde); margin-top:14px; }
+  .ok { text-align:center; color:var(--verde); font-weight:800; font-size:19px; min-height:28px; margin-top:8px; }
+  .zoom { position:fixed; inset:0; background:rgba(0,0,0,.88); display:none; align-items:flex-start; justify-content:center; overflow:auto; z-index:20; padding:16px; }
+  .zoom.abierto { display:flex; }
+  .zoom img { width:100%; max-width:720px; border-radius:10px; }
+  .zoom button { position:fixed; top:12px; right:12px; font-size:18px; font-weight:700; border:none; border-radius:99px; padding:10px 16px; background:#fff; }
+  .icono { font-size:56px; line-height:1; margin:6px 0 2px; }
+  .burbuja { background:#dcf8c6; border-radius:16px 16px 4px 16px; padding:14px 16px; font-size:18px; margin:12px 0; box-shadow:0 1px 2px rgba(0,0,0,.12); }
+  .burbuja b { color:var(--rosa); }
+  .chat { background:#efe7dd; border-radius:16px; padding:10px; }
+  .tip { font-size:15px; color:var(--suave); text-align:center; margin-top:10px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="barra" id="barra" hidden>
+    <div class="progreso"><i id="relleno"></i></div>
+    <div class="cuenta"><span id="cuenta"></span><span id="hechas"></span></div>
+    <div class="puntos" id="puntos"></div>
+  </div>
+  <div id="pantalla"></div>
+</main>
+<div class="abajo" id="abajo" hidden><div>
+  <button id="atras">← Atrás</button>
+  <button id="sigue" class="principal">Siguiente →</button>
+</div></div>
+<div class="zoom" id="zoom"><button id="cerrarZoom">Cerrar ✕</button><img id="zoomImg" alt="foto grande"></div>
+
+<script>
+const T = [{"id": "R1", "grupo": "Cuando un niño falta", "color": "rosa", "icono": "📅", "titulo": "¿Quién da el horario?", "texto": "Cuando un papá avisa que el niño no viene, hoy el bot te deja el aviso y tú buscas el horario.", "pregunta": "¿Cómo quieres que sea?", "opciones": ["⭐ La app me propone un horario y yo lo apruebo con un toque", "El bot se lo da solo al papá", "Lo sigo haciendo yo por WhatsApp"], "tecnico": "quién agenda la recuperativa", "nota": null, "burbuja": null, "fotos": []}, {"id": "R2", "grupo": "Cuando un niño falta", "color": "rosa", "icono": "👧", "titulo": "¿Cuántos niños caben?", "texto": "Hoy el sábado de 12 a 13 hay 10 niños, y el miércoles de 17:30 a 18:30 hay 7.", "pregunta": "¿Cuántos niños caben como máximo en una hora?", "opciones": ["6 niños", "8 niños", "10 niños", "12 niños", "Depende de la hora"], "tecnico": "tope por hora para dar cupo de recuperativa (conteo de inscritos activos en producción 21-11)", "nota": "Si depende de la hora, escribe cuántos en cada una", "burbuja": null, "fotos": []}, {"id": "R3", "grupo": "Cuando un niño falta", "color": "rosa", "icono": "🎨", "titulo": "¿En qué clase recupera?", "texto": "Ejemplo: Tomás tiene 8 años, va al Taller de Artes los jueves y faltó.", "pregunta": "¿A qué clase puede ir a recuperar?", "opciones": ["⭐ A cualquier hora con espacio, con niños de su edad", "Solo a su mismo día y hora, otra semana", "Solo a algunos horarios"], "tecnico": "qué bloques sirven para recuperar (edad, taller, profe)", "nota": "Si son solo algunos horarios, escribe cuáles", "burbuja": null, "fotos": []}, {"id": "R4", "grupo": "Cuando un niño falta", "color": "rosa", "icono": "⏰", "titulo": "Si falta al Premium", "texto": "La clase del Premium dura 2 horas.", "pregunta": "¿Cómo la recupera?", "opciones": ["⭐ Las 2 horas juntas, otro día", "En dos clases de 1 hora", "Lo veo yo cada vez"], "tecnico": "recuperativa de clase de 2 horas", "nota": null, "burbuja": null, "fotos": []}, {"id": "R5", "grupo": "Cuando un niño falta", "color": "rosa", "icono": "🗓️", "titulo": "Si falta a fin de mes", "texto": "Ejemplo: falta el sábado 28 de noviembre y ya no quedan clases en noviembre.", "pregunta": "¿Qué hacemos?", "opciones": ["⭐ Recupera en la primera semana de diciembre", "Se pierde, es la regla", "Lo decido yo cada vez"], "tecnico": "última semana del mes (regla: dentro del mismo mes)", "nota": null, "burbuja": null, "fotos": []}, {"id": "R6", "grupo": "Cuando un niño falta", "color": "rosa", "icono": "🙋", "titulo": "Si falta SIN avisar", "texto": "A veces el niño no llega y nadie avisa.", "pregunta": "¿También puede recuperar esa clase?", "opciones": ["⭐ Sí, igual que si avisó", "No, solo si avisó antes"], "tecnico": "faltas sin aviso (botón No vino en Confirmaciones)", "nota": null, "burbuja": null, "fotos": []}, {"id": "T1", "grupo": "Lo que va a decir el bot", "color": "verde", "icono": "💬", "titulo": "Cuando el papá avisa", "texto": "Así le contestaría el bot. Lo rosado cambia en cada caso, y «que se mejore» va solo si está enfermo.", "pregunta": "¿Te gusta así?", "opciones": ["⭐ Sí, me gusta", "Cámbialo"], "tecnico": "texto que ofrece la recuperativa", "nota": "Si quieres cambiar algo, escríbelo", "burbuja": "Que se mejore 💚 Recuperar la clase es un beneficio de Arteluk y se hace dentro de <b>noviembre</b>. Le ofrecemos el <b>martes 24 de 17:30 a 18:30</b>, ¿le acomoda? Si no le sirve, puede pedirnos otro horario dentro del mes, según los cupos. Si no se alcanza a recuperar en el mes, esa clase se pierde 🎨", "fotos": []}, {"id": "T2", "grupo": "Lo que va a decir el bot", "color": "verde", "icono": "💬", "titulo": "Cuando el papá dice que sí", "texto": "Esto contestaría el bot, y la clase queda anotada en tu calendario.", "pregunta": "¿Te gusta así?", "opciones": ["⭐ Sí, me gusta", "Cámbialo"], "tecnico": "texto cuando acepta la recuperativa", "nota": "Si quieres cambiar algo, escríbelo", "burbuja": "Listo 😊 <b>Tomás</b> queda anotado para recuperar el <b>martes 24 de 17:30 a 18:30</b>. Ese día le llega el recordatorio como siempre.", "fotos": []}];
+const CLAVE = 'arteluk-recuperar-2026-11';
+let resp = {}, notas = {}, i = -1;
+try { const g = JSON.parse(localStorage.getItem(CLAVE) || '{}'); resp = g.resp || {}; notas = g.notas || {}; } catch (e) {}
+const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify({ resp, notas })); } catch (e) {} };
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function inicio() {
+  i = -1; $('barra').hidden = true; $('abajo').hidden = true;
+  const hechas = Object.keys(resp).length;
+  $('pantalla').innerHTML = `
+    <div class="card">
+      <span class="chip rosa">8 preguntas cortas</span>
+      <h1>Hola Mary 🌷</h1>
+      <p class="texto">Para que el bot te ayude a <b>recuperar clases</b>, me faltan <b>8 respuestas</b>. Una a la vez, solo tocando.</p>
+      <ul class="pasos">
+        <li><b>1</b>Lee la pregunta</li>
+        <li><b>2</b>Toca tu respuesta (la ⭐ es la que te recomiendo)</li>
+        <li><b>3</b>Al final, toca <b>Copiar</b> y mándaselo a Lukas</li>
+      </ul>
+      <p class="tip">Si cierras la página, tus respuestas quedan guardadas en este teléfono.</p>
+    </div>
+    <button class="copiar" style="background:var(--rosa)" onclick="ir(${hechas && hechas < T.length ? primeraSinResponder() : 0})">${hechas ? 'Seguir donde quedé →' : 'Empezar →'}</button>
+    ${hechas ? `<p class="tip">Llevas ${hechas} de ${T.length}.</p>` : ''}`;
+}
+function primeraSinResponder() { const k = T.findIndex(t => !resp[t.id]); return k < 0 ? 0 : k; }
+
+function barra() {
+  $('barra').hidden = false; $('abajo').hidden = false;
+  const hechas = T.filter(t => resp[t.id]).length;
+  $('relleno').style.width = (hechas / T.length * 100) + '%';
+  $('cuenta').textContent = `${i + 1} de ${T.length}`;
+  $('hechas').textContent = `✔ ${hechas} respondidas`;
+  $('puntos').innerHTML = T.map((t, k) => `<button aria-label="ir a ${k + 1}" class="${resp[t.id] ? 'listo' : ''} ${k === i ? 'actual' : ''}" onclick="ir(${k})"></button>`).join('');
+  $('atras').disabled = false;
+  $('sigue').textContent = i === T.length - 1 ? 'Terminar ✔' : 'Siguiente →';
+}
+
+function ir(k) {
+  i = k; const t = T[k];
+  $('pantalla').innerHTML = `
+    <div class="card">
+      <span class="chip ${t.color}">${esc(t.grupo)}</span>
+      <div class="icono">${t.icono}</div>
+      <h2>${esc(t.titulo)}</h2>
+      <p class="texto">${esc(t.texto)}</p>
+      ${t.burbuja ? `<div class="chat"><div class="burbuja">${t.burbuja}</div></div>` : ''}
+      ${t.fotos.map(f => `<div class="foto"><span>${esc(f.t)}</span><img src="${f.src}" alt="${esc(f.t)}" onclick="zoom(this.src)"></div>`).join('')}
+      <div class="pregunta">${esc(t.pregunta)}</div>
+      <div class="opciones">${t.opciones.map((o, n) => `<button class="${resp[t.id] === o ? 'elegida' : ''}" onclick="elegir(${n})">${esc(o)}</button>`).join('')}</div>
+      <button class="nota-btn" onclick="abrirNota()">${notas[t.id] ? '✏️ Tu nota' : '✏️ ' + esc(t.nota || 'Quiero decir algo más')}</button>
+      <div id="nota" ${notas[t.id] || t.nota ? '' : 'hidden'}><textarea id="notaTxt" placeholder="${esc(t.nota || 'Escribe aquí')}">${esc(notas[t.id] || '')}</textarea></div>
+    </div>`;
+  const ta = $('notaTxt'); ta.oninput = () => { notas[t.id] = ta.value.trim(); if (!notas[t.id]) delete notas[t.id]; guardar(); };
+  barra(); window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function abrirNota() { $('nota').hidden = false; $('notaTxt').focus(); }
+function elegir(n) {
+  const t = T[i]; resp[t.id] = t.opciones[n]; guardar();
+  document.querySelectorAll('.opciones button').forEach((b, k) => b.classList.toggle('elegida', k === n));
+  barra();
+  if (!t.nota) setTimeout(() => (i < T.length - 1 ? ir(i + 1) : fin()), 650);
+}
+
+function texto() {
+  const l = ['Respuestas de Mary · recuperar clases', ''];
+  T.forEach((t, k) => {
+    l.push(`${k + 1}. ${t.titulo}: ${resp[t.id] || '(sin responder)'}` + (notas[t.id] ? ` · Nota: ${notas[t.id]}` : '') + `  [${t.id} · ${t.tecnico}]`);
+  });
+  return l.join('\n');
+}
+function fin() {
+  i = T.length; $('barra').hidden = true; $('abajo').hidden = false;
+  $('atras').disabled = false; $('sigue').textContent = 'Volver al inicio';
+  const faltan = T.filter(t => !resp[t.id]).length;
+  $('pantalla').innerHTML = `
+    <div class="card">
+      <span class="chip verde">${faltan ? 'Casi listo' : '¡Listo!'}</span>
+      <h1>${faltan ? `Te faltan ${faltan}` : '¡Gracias, Mary! 💛'}</h1>
+      <p class="texto">${faltan ? 'Las amarillas no tienen respuesta. Tócalas para responderlas, o manda igual lo que tienes.' : 'Ahora toca el botón verde y pégaselo a Lukas por WhatsApp.'}</p>
+      <div class="resumen">${T.map((t, k) => `<div class="${resp[t.id] ? '' : 'falta'}" onclick="ir(${k})"><b>${k + 1}. ${esc(t.titulo)}</b><small>${esc(resp[t.id] || 'Sin responder · toca para responder')}${notas[t.id] ? ' · ' + esc(notas[t.id]) : ''}</small></div>`).join('')}</div>
+      <button class="copiar" onclick="copiar()">📋 Copiar respuestas</button>
+      <div class="ok" id="ok"></div>
+      <a class="wsp" id="wsp" href="#" target="_blank" rel="noopener">O mandarlas directo por WhatsApp →</a>
+    </div>`;
+  $('wsp').href = 'https://wa.me/?text=' + encodeURIComponent(texto());
+  window.scrollTo({ top: 0 });
+}
+async function copiar() {
+  const s = texto();
+  try { await navigator.clipboard.writeText(s); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = s; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove(); }
+  $('ok').textContent = '✔ Copiado. Ahora pégalo en el WhatsApp de Lukas.';
+}
+function zoom(src) { $('zoomImg').src = src; $('zoom').classList.add('abierto'); }
+$('cerrarZoom').onclick = $('zoom').onclick = e => { if (e.target.id !== 'zoomImg') $('zoom').classList.remove('abierto'); };
+$('atras').onclick = () => (i <= 0 ? inicio() : ir(i - 1));
+$('sigue').onclick = () => (i >= T.length ? inicio() : i === T.length - 1 ? fin() : ir(i + 1));
+inicio();
+</script>
+</body>
+</html>
